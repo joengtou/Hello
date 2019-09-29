@@ -1,0 +1,76 @@
+package Rsa;
+import java.io.*;
+public class Rsa {
+
+	public static int getpq(int max) {
+		int n=4;
+		while(!sushu(n)) {
+		n=(int)(2+Math.random()*max);
+		}
+		return n;
+		
+	}
+	public static boolean sushu(int n) {
+		int i;
+		if(n==2)
+				return true;
+		else {
+			for(i=2;i<n;i++) {
+				if(n%i==0) {
+					return false;
+				}		
+			}		
+		}
+		return true;
+		
+	}
+	public static void main(String[] args) throws IOException {
+		int p,q,n,on,e,d = 0;
+		p=getpq(20);
+		q=getpq(20);
+		n=p*q;
+		on=(p-1)*(q-1);
+		e=getpq(on);
+//		p=17;
+//		q=11;
+//		n=187;
+//		on=160;
+		e=7;int i;
+		for(i=1;i<on;i++) {
+		d=i;
+		if((d*e)%on==1) {
+			break;
+		}
+		}
+		System.out.println("PU={"+e+","+n+"}");
+		System.out.println("PR={"+d+","+n+"}");
+//		System.out.println(on);
+		File mw=new File("C:\\Users\\lenovo\\Desktop\\明文.txt");
+		File miw=new File("C:\\Users\\lenovo\\Desktop\\密文.txt");
+		File jm=new File("C:\\Users\\lenovo\\Desktop\\解密.txt");
+		InputStream ip=new FileInputStream(mw);
+		OutputStream op=new FileOutputStream(miw);
+		InputStream ip2=new FileInputStream(miw);
+		OutputStream op2=new FileOutputStream(jm);
+		byte[] c=new byte[1024];
+		while(ip.read(c)!=-1) {
+			c=(int) Math.pow(c, e)%n;
+			System.out.println(c);
+			op.write((char)c);
+		//	System.out.print((char)c);
+		}
+		System.out.println("加密完成");
+		ip.close();
+        op.close();
+		while((c=ip2.read())!=-1) {
+			c=(int) Math.pow(c, d)%n;
+			op2.write((char)c);
+			System.out.println(c);
+		//	System.out.print((char)c);
+		}
+		System.out.println("解密完成");
+		ip2.close();
+		op2.close();
+	}
+
+}
